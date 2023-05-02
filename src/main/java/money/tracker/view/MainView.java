@@ -14,7 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
-@Route("main")
+@Route
 public class MainView extends VerticalLayout {
     private final ItemRepo repo;
     private final TextField filter = new TextField("", "Фильтрации по типу");

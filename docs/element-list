@@ -1,0 +1,5 @@
+money.tracker
+money.tracker.component
+money.tracker.domain
+money.tracker.repo
+money.tracker.view
