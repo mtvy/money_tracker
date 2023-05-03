@@ -2,6 +2,7 @@ package money.tracker.view;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
@@ -14,11 +15,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
+/** Отображение главной страницы */
 @Route
 public class MainView extends VerticalLayout {
     private final ItemRepo repo;
-    private final TextField filter = new TextField("", "Фильтрации по типу");
+    private final TextField filter = new TextField("", "Поиск по записям");
     private final Button addBtn = new Button("+ Добавить новую запись");
+    private final Anchor aboutAnchor = new Anchor("https://mtvy.github.io/", "Об авторе");
     private final HorizontalLayout toolbar = new HorizontalLayout(filter, addBtn);
     private final Grid<Item> grid = new Grid<>(Item.class);
     private final TextField sumCostTxt = new TextField("", "Суммарный перерасчёт: 0");
@@ -27,7 +30,7 @@ public class MainView extends VerticalLayout {
     public MainView(ItemRepo repo, ItemEditor editor) {
         this.repo = repo;
 
-        add(toolbar, grid, sumCostTxt, editor);
+        add(toolbar, aboutAnchor, grid, sumCostTxt, editor);
 
         filter.setValueChangeMode(ValueChangeMode.EAGER);
         filter.addValueChangeListener(e -> showItem(e.getValue()));
@@ -41,6 +44,7 @@ public class MainView extends VerticalLayout {
             showItem(filter.getValue());
         });
 
+        aboutAnchor.getElement().setAttribute("target", "_blank");
         sumCostTxt.setEnabled(false);
         showItem(filter.getValue());
     }

@@ -9,7 +9,7 @@ import java.util.List;
 
 /** JPA Репозиторий */
 public interface ItemRepo extends JpaRepository<Item, Long> {
-    /** Отбираем записи по типу */
+    /** Поиск записи */
     @Query(
             "from Item i " +
                     "where concat(i.id, ' ', i.type, ' ', i.cost, ' ', i.dest, ' ', i.date) " +

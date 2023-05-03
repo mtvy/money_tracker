@@ -14,7 +14,11 @@ import money.tracker.repo.ItemRepo;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
+
+/** Editor для изменения данных в записях */
 @SpringComponent
 @UIScope
 public class ItemEditor  extends VerticalLayout implements KeyNotifier {
@@ -23,16 +27,15 @@ public class ItemEditor  extends VerticalLayout implements KeyNotifier {
 
     private final TextField
             rowCost = new TextField("", "Сумма"),
-            date = new TextField("", "Дата"),
+            date = new TextField("", "Дата ГГГГ-ММ-ДД"),
             type = new TextField("", "Тип"),
             dest = new TextField("", "Назничение");
 
     private final Button
             save = new Button("Сохранить"),
-            cancel = new Button("Отменить"),
             delete = new Button("Удалить");
 
-    private final HorizontalLayout buttons = new HorizontalLayout(save, cancel, delete);
+    private final HorizontalLayout buttons = new HorizontalLayout(save, delete);
 
     private final Binder<Item> binder = new Binder<>(Item.class);
 
@@ -51,41 +54,84 @@ public class ItemEditor  extends VerticalLayout implements KeyNotifier {
 
         binder.bindInstanceFields(this);
 
-        /* Добавляем интервалы */
+        // Добавляем интервалы
         setSpacing(true);
 
-        /* Изменяем внешний вид кнопок */
+        // Изменяем внешний вид кнопок
         save.getElement().getThemeList().add("primary");
         delete.getElement().getThemeList().add("error");
 
-        /* Слушаем события на кнопках */
+        // Слушаем события на кнопках
         addKeyPressListener(Key.ENTER, e -> save());
+
+        // Слушаем поле и проверяем на валидность
+        rowCost.addValueChangeListener(e -> setValues(rowCost.getValue()));
+        date.addValueChangeListener(e -> setValues(rowCost.getValue()));
+        type.addValueChangeListener(e -> setValues(rowCost.getValue()));
+        dest.addValueChangeListener(e -> setValues(rowCost.getValue()));
 
         save.addClickListener(e -> save());
         delete.addClickListener(e -> delete());
-        cancel.addClickListener(e -> edit(item));
-        rowCost.addValueChangeListener(e -> setCost(rowCost.getValue()));
 
-        /* Делаем форму невидимой */
+        // Делаем форму невидимой
         setVisible(false);
+
+        // Отключаем кнопку, когда пустые поля
+        save.setEnabled(false);
     }
 
-    private  void setCost(String rowCostValue) {
-        double result;
-        if (rowCostValue.equals("")){
+
+    /** Проверка на ввод всех полей */
+    private void updateEnable() {
+        if (
+                !rowCost.getValue().equals("") &&
+                !date.getValue().equals("") &&
+                !type.getValue().equals("") &&
+                !dest.getValue().equals("")
+        ) {
+            save.setEnabled(true);
             return;
         }
+        save.setEnabled(false);
+    }
 
+    /**
+     * Устанавливаем Cost если валидный
+     * @param rowCostValue - значение в ячейке с суммой
+     */
+    private void setValues(String rowCostValue) {
+        double result;
+        boolean isEnable = true;
+        if (rowCostValue.equals("")) {
+            return;
+        }
         try {
-            result = Double.parseDouble(rowCostValue);
+            result = Math.round(Double.parseDouble(rowCostValue) * 100.0) / 100.0;
             item.setCost(result);
             rowCost.getStyle().set("color", "#283646");
-            save.getElement().setEnabled(true);
+            isEnable = true;
         }
-        catch (NumberFormatException nfe) {
+        catch (Exception e) {
             rowCost.getStyle().set("color", "#F52518");
-            save.getElement().setEnabled(false);
+            isEnable = false;
         }
+
+        String dt = date.getValue();
+        SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-DD");
+        try {
+            sdf.parse(dt);
+            date.getStyle().set("color", "#283646");
+            isEnable = true;
+        } catch (Exception e) {
+            date.getStyle().set("color", "#F52518");
+            isEnable = false;
+        }
+
+        if (isEnable) {
+            updateEnable();
+            return;
+        }
+        save.getElement().setEnabled(isEnable);
     }
 
     /** Функционал сохранения */
@@ -100,7 +146,11 @@ public class ItemEditor  extends VerticalLayout implements KeyNotifier {
         changeHandler.onChange();
     }
 
-    /** Функционал изменения */
+    /**
+     * Функционал изменения
+     * обработка данных из таблицы или создание новой записи
+     * @param it - объект записи
+     */
     public void edit(Item it) {
         /* Если запись пустая то форма невидимая */
         if (it == null) {
