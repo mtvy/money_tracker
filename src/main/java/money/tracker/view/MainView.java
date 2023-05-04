@@ -30,7 +30,8 @@ public class MainView extends VerticalLayout implements HasUrlParameter<String> 
     private final TextField filter = new TextField("", "Поиск по записям");
     private final Button addBtn = new Button("+ Добавить новую запись");
     private final Anchor aboutAnchor = new Anchor("https://mtvy.github.io/", "Об авторе");
-    private final HorizontalLayout toolbar = new HorizontalLayout(filter, addBtn);
+    private final Button signOutBtn = new Button("Вход");
+    private final HorizontalLayout toolbar = new HorizontalLayout(filter, addBtn, signOutBtn);
     private final Grid<Item> grid = new Grid<>(Item.class);
     private final TextField sumCostTxt = new TextField("", "Суммарный перерасчёт: 0");
 
@@ -90,6 +91,10 @@ public class MainView extends VerticalLayout implements HasUrlParameter<String> 
         grid.asSingleSelect().addValueChangeListener(e -> editor.edit(e.getValue(), this.user));
 
         addBtn.addClickListener(e -> editor.edit(new Item(), this.user));
+
+        signOutBtn.addClickListener(e -> {
+            signOutBtn.getUI().ifPresent(ui -> ui.navigate(UserView.class));
+        });
 
         editor.setChangeHandler(() -> {
             editor.setVisible(false);
