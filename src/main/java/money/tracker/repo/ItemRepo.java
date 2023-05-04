@@ -16,4 +16,9 @@ public interface ItemRepo extends JpaRepository<Item, Long> {
                     "like concat('%', :type, '%', '%', '%') and i.username=:username"
     )
     List<Item> findByType(@Param("type") String type, @Param("username") String username);
+
+    @Query(
+            "from Item i where i.username=:username"
+    )
+    List<Item> findByUser(@Param("username") String username);
 }

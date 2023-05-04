@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 /** JPA Репозиторий */
-public interface UserRepo extends JpaRepository<Item, Long> {
+public interface UserRepo extends JpaRepository<User, Long> {
     /** Поиск записи */
     @Query("from User u where u.username=:username")
     List<User> findByUsername(@Param("username") String username);

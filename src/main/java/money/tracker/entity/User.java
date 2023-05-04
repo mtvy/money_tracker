@@ -1,63 +1,37 @@
 package money.tracker.entity;
 
+import lombok.Data;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.validation.constraints.NotBlank;
-import java.util.Objects;
+import javax.persistence.Table;
 
-
+@Data
 @Entity
+@Table(name="user_tb")
 public class User {
-    private @Id @GeneratedValue long id;
-    private @NotBlank String username;
-    private @NotBlank String password;
-    private @NotBlank boolean loggedIn;
+    /** Порядковый номер записи */
+    @Id
+    @GeneratedValue
+    private Long id;
+    /** Тип записи */
+    private String username;
+    /** Указанная в записи стоимость */
+    private String password;
+
+    public User() {}
+
     public User(String username, String password) {
         this.username = username;
         this.password = password;
     }
-    public long getId() {
+
+    public Long getId() {
         return id;
     }
+
     public String getUsername() {
         return username;
-    }
-    public void setUsername(String username) {
-        this.username = username;
-    }
-    public String getPassword() {
-        return password;
-    }
-    public void setPassword(String password) {
-        this.password = password;
-    }
-    public boolean isLoggedIn() {
-        return loggedIn;
-    }
-    public void setLoggedIn(boolean loggedIn) {
-        this.loggedIn = loggedIn;
-    }
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof User)) return false;
-        User user = (User) o;
-        return Objects.equals(username, user.username) &&
-                Objects.equals(password, user.password);
-    }
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, username, password,
-                loggedIn);
-    }
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", username='" + username + '\'' +
-                ", password='" + password + '\'' +
-                ", loggedIn=" + loggedIn +
-                '}';
     }
 }

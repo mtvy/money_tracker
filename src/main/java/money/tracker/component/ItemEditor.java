@@ -10,6 +10,7 @@ import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
 import money.tracker.entity.Item;
+import money.tracker.entity.User;
 import money.tracker.repo.ItemRepo;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,7 @@ import java.text.SimpleDateFormat;
 public class ItemEditor extends VerticalLayout implements KeyNotifier {
     private final ItemRepo repo;
     private Item item;
+    private User user;
 
     private final TextField
             rowCost = new TextField("", "Сумма"),
@@ -135,6 +137,7 @@ public class ItemEditor extends VerticalLayout implements KeyNotifier {
 
     /** Функционал сохранения */
     private void save() {
+        item.setUsername(user.getUsername());
         repo.save(item);
         changeHandler.onChange();
     }
@@ -150,7 +153,8 @@ public class ItemEditor extends VerticalLayout implements KeyNotifier {
      * обработка данных из таблицы или создание новой записи
      * @param it - объект записи
      */
-    public void edit(Item it) {
+    public void edit(Item it, User u) {
+        this.user = u;
         /* Если запись пустая то форма невидимая */
         if (it == null) {
             rowCost.setValue("");

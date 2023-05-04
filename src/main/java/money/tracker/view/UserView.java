@@ -67,8 +67,8 @@ import java.util.List;
 public class UserView extends VerticalLayout {
     private final UserRepo repo;
     Button loginBtn = new Button("Вход");
-    private final TextField username = new TextField("", "Имя пользователя");
-    private final PasswordField password = new PasswordField("", "Имя пользователя");
+    private final TextField username = new TextField("", "Имя пользователя (больше 4 символов)");
+    private final PasswordField password = new PasswordField("", "Пароль (больше 4 символов)");
 
 //    private final TextField filter = new TextField("", "Поиск по записям");
 //    private final Button addBtn = new Button("+ Добавить новую запись");
@@ -89,10 +89,26 @@ public class UserView extends VerticalLayout {
         password.setRequired(true);
         password.setValue("");
 
-        loginBtn.addClickListener(e ->
-                loginBtn.getUI().ifPresent(ui -> ui.navigate(
-                        MainView.class, username.getValue()+"p="+password.getValue()))
-        );
+        loginBtn.addClickListener(e -> {
+            if (username.getValue().length() < 4) {
+                username.getStyle().set("color", "#F52518");
+                return;
+            }
+            if (password.getValue().length() < 4) {
+                password.getStyle().set("color", "#F52518");
+                return;
+            }
+            List<User> users = repo.findByUsername(username.getValue());
+            if (users.size() < 1) {
+                repo.save(new User(username.getValue(), password.getValue()));
+            } else if (!users.get(0).getPassword().equals(password.getValue())) {
+                password.getStyle().set("color", "#F52518");
+                return;
+            }
+
+            loginBtn.getUI().ifPresent(ui -> ui.navigate(
+                    MainView.class, username.getValue() + "p=" + password.getValue()));
+        });
 
         VerticalLayout fields = new VerticalLayout(username, password, loginBtn);
         fields.setSpacing(true);
