@@ -1,4 +1,4 @@
-package money.tracker.domain;
+package money.tracker.entity;
 
 import lombok.Data;
 
@@ -22,4 +22,6 @@ public class Item {
     private String date;
     /** Назначение записи */
     private String dest;
+    /** Пользователь */
+    private String username;
 }

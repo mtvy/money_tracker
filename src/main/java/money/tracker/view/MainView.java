@@ -7,17 +7,21 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.value.ValueChangeMode;
+import com.vaadin.flow.router.BeforeEvent;
+import com.vaadin.flow.router.HasUrlParameter;
 import com.vaadin.flow.router.Route;
 import money.tracker.component.ItemEditor;
-import money.tracker.domain.Item;
+import money.tracker.entity.Item;
+import money.tracker.entity.User;
 import money.tracker.repo.ItemRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
 /** Отображение главной страницы */
-@Route
-public class MainView extends VerticalLayout {
+@Route("table")
+public class MainView extends VerticalLayout implements HasUrlParameter<String> {
+    private User user;
     private final ItemRepo repo;
     private final TextField filter = new TextField("", "Поиск по записям");
     private final Button addBtn = new Button("+ Добавить новую запись");
@@ -67,8 +71,14 @@ public class MainView extends VerticalLayout {
      */
     public void showItem(String type) {
         /* Если без фильтрации берём все иначе фильтруем */
-        List<Item> items = (type.isEmpty()) ? repo.findAll() : repo.findByType(type);
+        List<Item> items = (type.isEmpty()) ? repo.findAll() : repo.findByType(type, user.getUsername());
         grid.setItems(items);
         sumCostTxt.setValue("Сумма: "+countSum(items));
+    }
+
+    @Override
+    public void setParameter(BeforeEvent event, String user) {
+        String[] data = user.split("p=");
+        this.user = new User(data[0], data[1]);
     }
 }

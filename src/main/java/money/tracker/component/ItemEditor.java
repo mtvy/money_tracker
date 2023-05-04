@@ -9,19 +9,18 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
-import money.tracker.domain.Item;
+import money.tracker.entity.Item;
 import money.tracker.repo.ItemRepo;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
 
 
 /** Editor для изменения данных в записях */
 @SpringComponent
 @UIScope
-public class ItemEditor  extends VerticalLayout implements KeyNotifier {
+public class ItemEditor extends VerticalLayout implements KeyNotifier {
     private final ItemRepo repo;
     private Item item;
 
