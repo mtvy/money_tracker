@@ -1,4 +1,4 @@
-# Money Trecker
+# Money Tracker
 
 ## [Документация](https://mtvy.github.io/money_tracker/)
 
