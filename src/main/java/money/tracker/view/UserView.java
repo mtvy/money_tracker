@@ -12,55 +12,6 @@ import money.tracker.repo.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
-//@Route("/users")
-//public class UserView {
-//
-//    public UserRepo repo;
-//
-//    @
-//    public Status registerUser() {
-//        List<User> users = repo.findAll();
-//        System.out.println("New user: " + newUser.toString());
-//        for (User user : users) {
-//            System.out.println("Registered user: " + newUser.toString());
-//            if (user.equals(newUser)) {
-//                System.out.println("User Already exists!");
-//                return Status.USER_ALREADY_EXISTS;
-//            }
-//        }
-//        repo.save(newUser);
-//        return Status.SUCCESS;
-//    }
-//    @PostMapping("/users/login")
-//    public Status loginUser(@Valid @RequestBody User user) {
-//        List<User> users = repo.findAll();
-//        for (User other : users) {
-//            if (other.equals(user)) {
-//                user.setLoggedIn(true);
-//                repo.save(user);
-//                return Status.SUCCESS;
-//            }
-//        }
-//        return Status.FAILURE;
-//    }
-//    @PostMapping("/users/logout")
-//    public Status logUserOut(@Valid @RequestBody User user) {
-//        List<User> users = repo.findAll();
-//        for (User other : users) {
-//            if (other.equals(user)) {
-//                user.setLoggedIn(false);
-//                repo.save(user);
-//                return Status.SUCCESS;
-//            }
-//        }
-//        return Status.FAILURE;
-//    }
-//    @DeleteMapping("/users/all")
-//    public Status deleteUsers() {
-//        repo.deleteAll();
-//        return Status.SUCCESS;
-//    }
-//}
 
 /** Отображение главной страницы */
 @Route("")
@@ -69,13 +20,6 @@ public class UserView extends VerticalLayout {
     Button loginBtn = new Button("Вход");
     private final TextField username = new TextField("", "Имя пользователя (больше 4 символов)");
     private final PasswordField password = new PasswordField("", "Пароль (больше 4 символов)");
-
-//    private final TextField filter = new TextField("", "Поиск по записям");
-//    private final Button addBtn = new Button("+ Добавить новую запись");
-//    private final Anchor aboutAnchor = new Anchor("https://mtvy.github.io/", "Об авторе");
-//    private final HorizontalLayout toolbar = new HorizontalLayout(filter, addBtn);
-//    private final Grid<Item> grid = new Grid<>(Item.class);
-//    private final TextField sumCostTxt = new TextField("", "Суммарный перерасчёт: 0");
 
     @Autowired
     public UserView(UserRepo repo, UserEditor editor) {
@@ -119,24 +63,11 @@ public class UserView extends VerticalLayout {
         uiLayout.setSizeFull();
         uiLayout.setHorizontalComponentAlignment(Alignment.CENTER, fields);
 
-//        add(toolbar, aboutAnchor, grid, sumCostTxt, editor);
-
-//        filter.setValueChangeMode(ValueChangeMode.EAGER);
-//        filter.addValueChangeListener(e -> showItem(e.getValue()));
-
-//        grid.asSingleSelect().addValueChangeListener(e -> editor.edit(e.getValue()));
-
-//        addBtn.addClickListener(e -> editor.edit(new Item()));
-
         add(uiLayout);
 
         loginBtn.addClickListener(e -> login());
 
         editor.setChangeHandler(() -> editor.setVisible(false));
-
-//        aboutAnchor.getElement().setAttribute("target", "_blank");
-//        sumCostTxt.setEnabled(false);
-//        showItem(filter.getValue());
     }
 
     public void login() {
@@ -149,7 +80,5 @@ public class UserView extends VerticalLayout {
             return;
         }
         List<User> users = repo.findByUsername(username.getValue());
-
-
     }
 }
